@@ -65,8 +65,10 @@
     </Compile>
     <Compile Include="BLL\GestionMainWindow.cs" />
     <Compile Include="BLL\IGestionMainWindow.cs" />
+    <Compile Include="DAL\BreastCancerSample.cs" />
     <Compile Include="DAL\GestionFichierTexte.cs" />
     <Compile Include="DAL\ILectureFichier.cs" />
+    <Compile Include="DAL\PerceptronSample.cs" />
     <Compile Include="GUI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
