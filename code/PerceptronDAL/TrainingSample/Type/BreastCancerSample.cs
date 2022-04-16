@@ -4,10 +4,15 @@ using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Shapes;
+
 using System.Windows;
 
-namespace _3TiersPresentation.DAL
+/// <summary>
+/// Démonstration du patron architectural 3 tiers et de plusieurs patrons de conception
+/// 
+/// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
+/// </summary>
+namespace Perceptron.DAL.TrainingSample.Type
 {
     /// <summary>
     /// Échantillon de cellules potentiellement cancéreuses
@@ -20,22 +25,22 @@ namespace _3TiersPresentation.DAL
      * Les 9 autres sont des caractéristiques observées en laboratoire
      * La dernière colonne contient le diagnostic résultant de l'observation des 9 caractéristiques précédentes
      * 
-           #  Attribute                     Domain
-           -- -----------------------------------------
-           1. Sample code number            id number (cet attribut a été enlevé des fichiers .dat)
-           2. Clump Thickness               1 - 10
-           3. Uniformity of Cell Size       1 - 10
-           4. Uniformity of Cell Shape      1 - 10
-           5. Marginal Adhesion             1 - 10
-           6. Single Epithelial Cell Size   1 - 10
-           7. Bare Nuclei                   1 - 10
-           8. Bland Chromatin               1 - 10
-           9. Normal Nucleoli               1 - 10
-          10. Mitoses                       1 - 10
-          11. Class:                        (2 for benign, 4 for malignant)
+    #  Attribute                     Domain
+    -- -----------------------------------------
+    1. Sample code number            id number (cet attribut a été enlevé des fichiers .dat)
+    2. Clump Thickness               1 - 10
+    3. Uniformity of Cell Size       1 - 10
+    4. Uniformity of Cell Shape      1 - 10
+    5. Marginal Adhesion             1 - 10
+    6. Single Epithelial Cell Size   1 - 10
+    7. Bare Nuclei                   1 - 10
+    8. Bland Chromatin               1 - 10
+    9. Normal Nucleoli               1 - 10
+    10. Mitoses                       1 - 10
+    11. Class:                        (0 for benign, 1 for malignant)
 
      */
-    internal class BreastCancerSample : PerceptronSample
+    internal class BreastCancerSample : TrainingSample
     {
         static readonly string[] BreastCancerSampleAttributeNames = {
            "Clump Thickness",
@@ -49,25 +54,21 @@ namespace _3TiersPresentation.DAL
            "Mitoses"
         };
 
-        static readonly string[] BreastCancerSampleResultNames = {
-           "Benign",
-           "Malignant"
+        static readonly string[] BreastCancerSampleResultNames = { 
+            "Benign",
+            "Malignant"
         };
 
-        public BreastCancerSample(int[] attributes, int result) : base(attributes, result)
+        public BreastCancerSample(float[] attributes, int result) : base(attributes, result)
         {
             AttributeNames = BreastCancerSampleAttributeNames;
             ResultNames = BreastCancerSampleResultNames;
             AttributeDomainMaxValue = 10;
             AttributeDomainMinValue = 1;
-            ResultDomainMaxValue = 4;
-            ResultDomainMinValue = 2;
+            ResultDomainMaxValue = 1;
+            ResultDomainMinValue = 0;
 
             validateData();
-            if (result == 3) // Validation extra pour données discontinues
-            {
-                throw new ArgumentException("Invalid result value");
-            }
         }
 
     }

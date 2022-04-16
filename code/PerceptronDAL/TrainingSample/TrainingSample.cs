@@ -1,31 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _3TiersPresentation.DAL
+﻿/// <summary>
+/// Démonstration du patron architectural 3 tiers et de plusieurs patrons de conception
+/// 
+/// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
+/// </summary>
+namespace Perceptron.DAL.TrainingSample
 {
     /// <summary>
     /// Échantillon de données pouvant être utilisé de façon homogène dans un perceptron
     /// </summary>
-    abstract class PerceptronSample
+    public abstract class TrainingSample
     {
         protected string[] AttributeNames;
         public string GetAttributeName(int index)
         {
             return AttributeNames[index];
         }
-        public int AttributeDomainMaxValue { get; protected set; }
-        public int AttributeDomainMinValue { get; protected set; }
-        protected int[] Attributes;
+        public float AttributeDomainMaxValue { get; protected set; }
+        public float AttributeDomainMinValue { get; protected set; }
+        protected float[] Attributes;
 
         /// <summary>
         /// Permet de connaitre la valeur d'un des attributs
         /// </summary>
         /// <param name="index">position dans le tableau d'attributs</param>
         /// <returns></returns>
-        public int GetAttributeValue(int index)
+        public float GetAttributeValue(int index)
         {
             return Attributes[index];
         }
@@ -59,8 +58,10 @@ namespace _3TiersPresentation.DAL
         public int ResultDomainMinValue { get; protected set; }
         int Result;
 
-        public PerceptronSample(int[] attributes, int result)
+        public TrainingSample(float[] attributes, int result)
         {
+            AttributeNames = new string[0];
+            ResultNames = new string[0];
             Attributes = attributes;
             Result = result;
         }
@@ -74,15 +75,15 @@ namespace _3TiersPresentation.DAL
 
             foreach (var attribute in Attributes)
             {
-                if (attribute < AttributeDomainMaxValue || attribute > AttributeDomainMaxValue)
+                if (attribute < AttributeDomainMinValue || attribute > AttributeDomainMaxValue)
                 {
-                    throw new ArgumentException("Invalid attribute : " + attribute + " is out of domain values");
+                    throw new ArgumentException("Invalid attribute : out of domain values ("+ AttributeDomainMinValue + " <= " + Result + " <= " + AttributeDomainMaxValue+")");
                 }
             }
 
             if (Result < ResultDomainMinValue || Result > ResultDomainMaxValue)
             {
-                throw new ArgumentException("Invalid result : "+ Result +" is out of domain values");
+                throw new ArgumentException("Invalid result : out of domain values (" + ResultDomainMinValue + " <= " + Result + " <= "+ ResultDomainMaxValue + ")");
             }
         }
     }

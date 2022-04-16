@@ -1,5 +1,4 @@
-﻿using _3TiersPresentation.BLL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _3TiersPresentation
+using Perceptron.BLL;
+
+namespace Perceptron.GUI
 {
     /// <summary>
     /// Auteur :      Hugo St-Louis
@@ -23,10 +24,11 @@ namespace _3TiersPresentation
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IGestionMainWindow _gestionMainWindow = new GestionMainWindow();
+
         public MainWindow()
         {
             InitializeComponent();
+            txtNomFichier.Text = @"..\..\..\..\Echantillons\breastw_train.dat";
         }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace _3TiersPresentation
                 txtConsole.Text = "Vous devez entrer un nom de fichier valide";
             else
             {
-                sValeurs = _gestionMainWindow.LireFichier(sNomFichier);
+                //sValeurs = _gestionMainWindow.LoadTrainingData(sNomFichier);
                 txtConsole.Text = sValeurs;
             }
         }
