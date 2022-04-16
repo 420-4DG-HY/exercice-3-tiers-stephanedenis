@@ -1,4 +1,5 @@
 ﻿using Perceptron.DAL.AI.Sample.Type;
+using Perceptron.DAL.TabularData;
 
 /// <summary>
 /// Démonstration du patron architectural 3 tiers et de plusieurs patrons de conception
@@ -59,78 +60,28 @@ namespace Perceptron.DAL.AI.Sample
         {
             List<AISample> samples = new List<AISample>();
 
-            if (!fileName.EndsWith(".dat"))
-            {
-                throw new InvalidOperationException(
-                    "Le nom de fichier doit finir par .dat");
-            }
+            ITabularDataReader tabularDataReader = TabularDataReaderFactory.CreateDataReader(fileName);
+            string[][] data = tabularDataReader.Read(fileName);
 
-            if (!File.Exists(fileName))
+            foreach (string[] sample in data)
             {
-                throw new InvalidOperationException(
-                    "Le fichier \"" + fileName + "\" est introuvable.");
-            }
 
-            try
-            {
-                int lines;
-                int columns;
-                StreamReader sr = new StreamReader(fileName);
                 try
                 {
-                    lines = int.Parse(sr.ReadLine());
-                    columns = int.Parse(sr.ReadLine());
+                    List<float> attributes = new List<float>();
+                    for (int i = 0; i < sample.Length - 1; i++) // Tout sauf la dernière colonne, car la dernière contient le champ réponse
+                    {
+                        attributes.Add(float.Parse(sample[i]));
+                    }
+                    int result = int.Parse(sample[sample.Length - 1]); // -1 car index débute à 0
+                    samples.Add(Create(perceptronSampleType, attributes.ToArray(), result));
                 }
-                catch (Exception ex) when (ex is NullReferenceException || ex is FormatException)
+                catch (FormatException ex)
                 {
                     throw new InvalidOperationException(
-                        "Le fichier \"" + fileName + "\" est mal formatté (entête)", ex);
-                }
-
-                int linesRead = 0; // pour valider le nombre d'entrées en rapport avec celui déclaré en entête
-                while (!sr.EndOfStream)
-                {
-                    string? line = sr.ReadLine();
-                    if(line == null)
-                    {
-                        throw new InvalidOperationException(
-                            "Le fichier \"" + fileName + "\" contient une ligne vide à un endroit innattendu.");
-                    }
-
-                    string[] dataLine = line.Split('\t');
-                    if (dataLine.Length != columns)
-                    {
-                        throw new InvalidOperationException(
-                            "Le fichier \"" + fileName + "\" contient une ligne avec un nombre de colonnes innattendu ("+ dataLine.Length+"/"+columns+").");
-                    }
-                    try {
-                        List<float> attributes = new List<float>();
-                        for(int i = 0; i < dataLine.Length-1; i++) // Tout sauf la dernière colonne, car la dernière contient le champ réponse
-                        {
-                            attributes.Add( float.Parse(dataLine[i]));
-                        }
-                        int result = int.Parse(dataLine[dataLine.Length - 1]); // -1 car index débute à 0
-                        samples.Add(Create(perceptronSampleType, attributes.ToArray(), result));
-                    }
-                    catch (FormatException ex)
-                    {
-                        throw new InvalidOperationException(
-                            "Le fichier \"" + fileName + "\" est mal formatté (données d'attributs)", ex);
-                    }
-                    linesRead++;
-                }
-                if(linesRead != lines)
-                {
-                    throw new InvalidOperationException(
-                        "Le fichier \"" + fileName + "\" contient un nombre d'entrées innattendu ("+linesRead+"/"+lines+").");
+                        "Le fichier \"" + fileName + "\" est mal formatté (données d'attributs)", ex);
                 }
             }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    "Erreur lors de la lecture du fichier \"" + fileName + "\". ", ex);
-            }
-
             return samples.ToArray();
         }
 
