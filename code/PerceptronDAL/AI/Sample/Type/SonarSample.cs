@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.TrainingSample.Type
+namespace Perceptron.DAL.AI.Sample.Type
 {
     /// <summary>
     /// Signaux de sonars permettant de distinguer les roches des mines
@@ -35,7 +35,7 @@ namespace Perceptron.DAL.TrainingSample.Type
 
     "R" if the object is a rock and "M" if it is a mine (metal cylinder).
      */
-    internal class SonarSample : TrainingSample
+    internal class SonarSample : AISample
     {
         static readonly string[] SonarSampleResultNames = {
             "Rock",

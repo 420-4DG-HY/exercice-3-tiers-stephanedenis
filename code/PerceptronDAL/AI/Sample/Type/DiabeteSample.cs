@@ -1,4 +1,4 @@
-﻿using Perceptron.DAL.TrainingSample;
+﻿using Perceptron.DAL.AI.Sample;
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.TrainingSample.Type
+namespace Perceptron.DAL.AI.Sample.Type
 {
     /// <summary>
     /// Données permettant de prédire un diabète à partir d'une étude sur des autochtones
@@ -37,7 +37,7 @@ namespace Perceptron.DAL.TrainingSample.Type
     class value 1 is interpreted as "tested positive for diabetes"
 
     */
-    internal class DiabeteSample : TrainingSample
+    internal class DiabeteSample : AISample
     {
         static readonly string[] DiabeteSampleAttributeNames = {
             "Number of times pregnant",

@@ -12,7 +12,7 @@ using System.Windows;
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.TrainingSample.Type
+namespace Perceptron.DAL.AI.Sample.Type
 {
     /// <summary>
     /// Échantillon de cellules potentiellement cancéreuses
@@ -40,7 +40,7 @@ namespace Perceptron.DAL.TrainingSample.Type
     11. Class:                        (0 for benign, 1 for malignant)
 
      */
-    internal class BreastCancerSample : TrainingSample
+    internal class BreastCancerSample : AISample
     {
         static readonly string[] BreastCancerSampleAttributeNames = {
            "Clump Thickness",

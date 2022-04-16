@@ -1,17 +1,17 @@
-﻿using Perceptron.DAL.TrainingSample.Type;
+﻿using Perceptron.DAL.AI.Sample.Type;
 
 /// <summary>
 /// Démonstration du patron architectural 3 tiers et de plusieurs patrons de conception
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.TrainingSample
+namespace Perceptron.DAL.AI.Sample
 {
     /// <summary>
     /// Démonstration du patron Fabrique (Factory) pour créer des instances d'échantillons (sample) pour le perceptron
     /// https://fr.wikipedia.org/wiki/Fabrique_(patron_de_conception)
     /// </summary>
-    public class TrainingSampleFactory
+    public class AISampleFactory
     {
         /// <summary>
         /// Crée une objet du sous-type spécifié contenant les données d'entrée et résultat passés en argument
@@ -21,7 +21,7 @@ namespace Perceptron.DAL.TrainingSample
         /// <param name="result">Sortie associée aux données d'entrées</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static TrainingSample Create(string perceptronSampleType, float[] attributes, int result)
+        public static AISample Create(string perceptronSampleType, float[] attributes, int result)
         {
             if (perceptronSampleType.Equals(typeof(BreastCancerSample).Name))
             {
@@ -55,9 +55,9 @@ namespace Perceptron.DAL.TrainingSample
         /// <param name="perceptronSampleType">Nom de la classe du type de données</param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static TrainingSample[] CreateFromDatFile(string perceptronSampleType, string fileName)
+        public static AISample[] CreateFromDatFile(string perceptronSampleType, string fileName)
         {
-            List<TrainingSample> samples = new List<TrainingSample>();
+            List<AISample> samples = new List<AISample>();
 
             if (!fileName.EndsWith(".dat"))
             {

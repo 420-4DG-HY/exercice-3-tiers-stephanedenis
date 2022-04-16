@@ -3,12 +3,12 @@
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.TrainingSample
+namespace Perceptron.DAL.AI.Sample
 {
     /// <summary>
     /// Échantillon de données pouvant être utilisé de façon homogène dans un perceptron
     /// </summary>
-    public abstract class TrainingSample
+    public abstract class AISample
     {
         protected string[] AttributeNames;
         public string GetAttributeName(int index)
@@ -58,7 +58,7 @@ namespace Perceptron.DAL.TrainingSample
         public int ResultDomainMinValue { get; protected set; }
         int Result;
 
-        public TrainingSample(float[] attributes, int result)
+        public AISample(float[] attributes, int result)
         {
             AttributeNames = new string[0];
             ResultNames = new string[0];

@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Perceptron.DAL.TrainingSample;
+using Perceptron.DAL.AI.Sample;
 
 namespace DAL_Test
 {
@@ -15,7 +15,7 @@ namespace DAL_Test
         public void BreastCancerSampleTest()
         {
             string filename = sampleRoot+"breastw_train.dat";
-            TrainingSample[] ts = TrainingSampleFactory.CreateFromDatFile("BreastCancerSample", filename);
+            AISample[] ts = AISampleFactory.CreateFromDatFile("BreastCancerSample", filename);
             Assert.AreEqual(343,ts.Length );
 
         }
@@ -23,7 +23,7 @@ namespace DAL_Test
         public void DiabeteSampleTest()
         {
             string filename = sampleRoot + "pima_train.dat";
-            TrainingSample[] ts = TrainingSampleFactory.CreateFromDatFile("DiabeteSample", filename);
+            AISample[] ts = AISampleFactory.CreateFromDatFile("DiabeteSample", filename);
             Assert.AreEqual(400, ts.Length);
 
         }
@@ -31,7 +31,7 @@ namespace DAL_Test
         public void SonarSampleTest()
         {
             string filename = sampleRoot + "sonar_train.dat";
-            TrainingSample[] ts = TrainingSampleFactory.CreateFromDatFile("SonarSample", filename);
+            AISample[] ts = AISampleFactory.CreateFromDatFile("SonarSample", filename);
             Assert.AreEqual(105, ts.Length);
 
         }
@@ -39,7 +39,7 @@ namespace DAL_Test
         public void USVoteSampleTest()
         {
             string filename = sampleRoot + "USVotes_train.dat";
-            TrainingSample[] ts = TrainingSampleFactory.CreateFromDatFile("USVoteSample", filename);
+            AISample[] ts = AISampleFactory.CreateFromDatFile("USVoteSample", filename);
             Assert.AreEqual(235, ts.Length);
 
         }
