@@ -42,7 +42,7 @@ namespace Perceptron.DAL.AI.Sample.Type
             "Mine"
         };
 
-        public SonarSample(float[] attributes, int result) : base(attributes, result)
+        public SonarSample(double[] attributes, int result) : base(attributes, result)
         {
             List<string> SonarAttributeNames = new List<string>();
             for (int i = 1; i <= 60; i++)

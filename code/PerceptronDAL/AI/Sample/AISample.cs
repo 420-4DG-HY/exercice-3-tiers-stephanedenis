@@ -15,16 +15,16 @@ namespace Perceptron.DAL.AI.Sample
         {
             return AttributeNames[index];
         }
-        public float AttributeDomainMaxValue { get; protected set; }
-        public float AttributeDomainMinValue { get; protected set; }
-        protected float[] Attributes;
+        public double AttributeDomainMaxValue { get; protected set; }
+        public double AttributeDomainMinValue { get; protected set; }
+        protected double[] Attributes;
 
         /// <summary>
         /// Permet de connaitre la valeur d'un des attributs
         /// </summary>
         /// <param name="index">position dans le tableau d'attributs</param>
         /// <returns></returns>
-        public float GetAttributeValue(int index)
+        public double GetAttributeValue(int index)
         {
             return Attributes[index];
         }
@@ -56,9 +56,9 @@ namespace Perceptron.DAL.AI.Sample
 
         public int ResultDomainMaxValue { get; protected set; }
         public int ResultDomainMinValue { get; protected set; }
-        int Result;
+        public int Result;
 
-        public AISample(float[] attributes, int result)
+        public AISample(double[] attributes, int result)
         {
             AttributeNames = new string[0];
             ResultNames = new string[0];

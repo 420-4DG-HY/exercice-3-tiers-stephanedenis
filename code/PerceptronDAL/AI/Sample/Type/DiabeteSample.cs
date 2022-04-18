@@ -55,7 +55,7 @@ namespace Perceptron.DAL.AI.Sample.Type
             "tested POSITIVE for diabetes"
         };
 
-        public DiabeteSample(float[] attributes, int result) : base(attributes, result)
+        public DiabeteSample(double[] attributes, int result) : base(attributes, result)
         {
             AttributeNames = DiabeteSampleAttributeNames;
             ResultNames = DiabeteSampleResultNames;

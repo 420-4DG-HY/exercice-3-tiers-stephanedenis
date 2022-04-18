@@ -22,7 +22,7 @@ namespace Perceptron.DAL.AI.Sample
         /// <param name="result">Sortie associée aux données d'entrées</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static AISample Create(string perceptronSampleType, float[] attributes, int result)
+        public static AISample Create(string perceptronSampleType, double[] attributes, int result)
         {
             if (perceptronSampleType.Equals(typeof(BreastCancerSample).Name))
             {
@@ -68,10 +68,10 @@ namespace Perceptron.DAL.AI.Sample
 
                 try
                 {
-                    List<float> attributes = new List<float>();
+                    List<double> attributes = new List<double>();
                     for (int i = 0; i < sample.Length - 1; i++) // Tout sauf la dernière colonne, car la dernière contient le champ réponse
                     {
-                        attributes.Add(float.Parse(sample[i]));
+                        attributes.Add(double.Parse(sample[i]));
                     }
                     int result = int.Parse(sample[sample.Length - 1]); // -1 car index débute à 0
                     samples.Add(Create(perceptronSampleType, attributes.ToArray(), result));

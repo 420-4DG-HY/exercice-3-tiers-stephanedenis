@@ -67,7 +67,7 @@ namespace Perceptron.DAL.AI.Sample.Type
             "democrat",
             "republican"
         };
-        public USVoteSample(float[] attributes, int result) : base(attributes, result)
+        public USVoteSample(double[] attributes, int result) : base(attributes, result)
         {
             AttributeNames = USVoteSampleAttributeNames;
             ResultNames = USVoteSampleResultNames;

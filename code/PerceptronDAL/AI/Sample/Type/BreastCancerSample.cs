@@ -59,7 +59,7 @@ namespace Perceptron.DAL.AI.Sample.Type
             "Malignant"
         };
 
-        public BreastCancerSample(float[] attributes, int result) : base(attributes, result)
+        public BreastCancerSample(double[] attributes, int result) : base(attributes, result)
         {
             AttributeNames = BreastCancerSampleAttributeNames;
             ResultNames = BreastCancerSampleResultNames;
