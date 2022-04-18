@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Perceptron.DAL.TabularData
 {
-    internal interface ITabularDataReader
+    public interface ITabularDataReader
     {
         string[][] Read(string fileName);
     }

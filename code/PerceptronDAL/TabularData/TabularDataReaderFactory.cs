@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Perceptron.DAL.TabularData
 {
-    internal class TabularDataReaderFactory
+    public class TabularDataReaderFactory
     {
         public static ITabularDataReader CreateDataReader(string fileName)
         {

@@ -56,7 +56,7 @@ namespace Perceptron.DAL.AI.Sample
         /// <param name="perceptronSampleType">Nom de la classe du type de données</param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static AISample[] CreateFromDatFile(string perceptronSampleType, string fileName)
+        public static AISample[] CreateFromFile(string perceptronSampleType, string fileName)
         {
             List<AISample> samples = new List<AISample>();
 
