@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using Perceptron.DAL.AI.Sample;
-using Perceptron.DAL.TabularData;
+using Demo3tiers.DAL.AI.Sample;
+using Demo3tiers.DAL.TabularData;
 
-namespace Perceptron.DAL.Tests
+namespace Demo3tiers.DAL.Tests
 {
     public class TabularDataTests
     {

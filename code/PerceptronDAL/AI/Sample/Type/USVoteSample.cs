@@ -9,7 +9,7 @@ using System;
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.AI.Sample.Type
+namespace Demo3tiers.DAL.AI.Sample.Type
 {
     /// <summary>
     /// Données permettants de prédire si un électeur votera Démocrate ou Républicain 
@@ -42,9 +42,9 @@ namespace Perceptron.DAL.AI.Sample.Type
         16. duty-free-exports: 2 (y,n)
         17. export-administration-act-south-africa: 2 (y,n)
     */
-    internal class USVoteSample : AISample
+    public class USVoteSample : AISample
     {
-        static readonly string[] USVoteSampleAttributeNames = {
+        public static readonly string[] USVoteSampleAttributeNames = {
             "handicapped-infants",
             "water-project-cost-sharing",
             "adoption-of-the-budget-resolution",
@@ -63,7 +63,7 @@ namespace Perceptron.DAL.AI.Sample.Type
             "export-administration-act-south-africa"
         };
 
-        static readonly string[] USVoteSampleResultNames = {
+        public static readonly string[] USVoteSampleResultNames = {
             "democrat",
             "republican"
         };

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Perceptron.DAL.TabularData
+namespace Demo3tiers.DAL.TabularData
 {
     public class TabularDataReaderFactory
     {

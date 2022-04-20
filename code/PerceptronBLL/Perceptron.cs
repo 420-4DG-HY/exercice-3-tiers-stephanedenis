@@ -1,142 +1,172 @@
-﻿using Perceptron.DAL.AI;
-using Perceptron.DAL.AI.Sample;
+﻿using Demo3tiers.DAL.AI;
+using Demo3tiers.DAL.AI.Sample;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 /// <summary>
 /// Démonstration du patron architectural 3 tiers et de plusieurs patrons de conception
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.BLL
+namespace Demo3tiers.BLL
 {
 
     /// <summary>
-    /// Auteur :      Hugo St-Louis
-    /// Description : Implémente la logique du perceptron.
-    /// Date :        2021-02-17
+    /// Implémentation de l'algorithme de prédiction et d'apprentissage du perceptron
+    /// https://fr.wikipedia.org/wiki/Perceptron
     /// </summary>
     public class Perceptron
     {
-        PerceptronData data;
+        PerceptronData synapse;
 
         /// <summary>
-        /// ctor
+        /// Construit un perceptron vierge
         /// </summary>
-        /// <param name="vitesseApp"></param>
-        public Perceptron(double learningSpeed, int inputSize)
+        /// <param name="inputSize">Nombre d'entrées des données d'un échantillon</param>
+        public Perceptron(int inputSize, string type)
         {
-            data = new PerceptronData(learningSpeed,inputSize);
+            synapse = new PerceptronData(inputSize, type);
         }
 
-        public Perceptron(string name)
+        /// <summary>
+        /// Récupère un perceptron déjà enregistré dans un fichier
+        /// </summary>
+        /// <param name="name">Nom du fichier (sans extension)</param>
+        public Perceptron(string fileName)
         {
-            data = PerceptronData.RetreiveFromFile(name);
+            synapse = PerceptronData.RetreiveFromFile(fileName);
         }
 
-        void initialize()
+        /// <summary>
+        /// Enregistre le perceptron dans un fichier
+        /// </summary>
+        /// <param name="fileName">Nom du fichier (sans extension)</param>
+        public void SavePerceptron(string fileName)
+        {
+            synapse.SaveToFile(fileName);
+        }
+
+        public void initializeWithRandomWeights()
         {
             Random rdn = new Random();
 
             //Initialise les poids synaptiques à des valeurs aléatoire
-            for (int i = 0; i < data.InputWeights.Length; i++)
-                data.InputWeights[i] = rdn.NextDouble();
+            for (int i = 0; i < synapse.Length; i++)
+                synapse[i] = rdn.NextDouble();
         }
+
         /// <summary>
-        ///   Permet l'apprentissage automatique du perceptron par rapport à 
-        ///   une base de données d'observations.
+        /// Pour normaliser le résultat, on réduit la prédiction au domaine 0..1
+        /// ici sans nuance : https://fr.wikipedia.org/wiki/Fonction_de_Heaviside
+        /// Option alternative : https://fr.wikipedia.org/wiki/Tangente_hyperbolique
         /// </summary>
-        /// <param name="samples">La base de données d'observations</param>
-        /// <returns>Résultats intermédiaires de l'apprentissage automatique.</returns>
-        public string Entrainement(AISample[] samples)
+        /// <param name="value">entrée</param>
+        /// <returns>valeur de 0 à 1 (ici, 0 ou 1)</returns>
+        double Heaviside(double value)
         {
-            double dSum = 0;
-            int iNbErreur = 0;
-            int iNbIteration = 0;
-            int iResultatEstime = 0;
-            int iErreurLocal = 0;
-            string sResultat = "";
+            return value > 0 ? 1.0 : 0.0 ;
+        }
 
+        /// <summary>
+        /// Permet l'apprentissage automatique du perceptron par rapport à une base de données d'observations (échantillons).
+        /// </summary>
+        /// <param name="samples">Échantillons de référence pour l'apprentissage</param>
+        /// <param name="learningSpeed">Vitesse d'apprentissage (ratio d'intégration des erreurs détectées)</param>
+        /// <param name="iterMax">Limite d'itérations</param>
+        /// <returns>Historique du nombre d'erreurs pendant l'apprentissage</returns>
+        public int[] LearnFrom(AISample[] samples, double learningSpeed = 0.1, int iterMax = 10000)
+        {
+            #region validation des arguments
+            if (learningSpeed <= 0 || learningSpeed >= 1)
+            {
+                throw new ArgumentException("learningSpeed doit être entre 0 et 1");
+            }
+            if (samples[0].Length != synapse.Length)
+            {
+                throw new Exception("Le nombre d'attributs des échantillons ne correspond pas au nombre de synapses du perceptron (" + samples[0].Length + "/" + synapse.Length + ")");
+            }
+            #endregion
 
+            // Historique retourné en résultat : Utile pour étudier la courbe d'apprentissage
+            List<int> learningErrorHistory = new List<int>();
+
+            int errors;
             do
             {
-                iNbErreur = 0;
-                foreach (AISample sample in samples)
+                errors = 0;
+                foreach (AISample subject in samples)
                 {
-                    //Évaluer une observation et de faire une prédiction.
-                    dSum = data.InputWeights[0];
-                    for (int j = 1; j < data.InputWeights.Length; j++)
-                    {
-                        dSum += data.InputWeights[j] * sample.GetAttributeValue( j - 1);
-                    }
-                    iResultatEstime = (dSum >= 0) ? 1 : 0;
-                    iErreurLocal = sample.Result - iResultatEstime;
+                    // Au cas où il y aurait des nuances (valeurs entre 0 et 1), on applique la même fonction de sortie
+                    // au résultat de l'échantillon que ce qui est utilisé pour le résultat notre perceptron 
+                    double target = Heaviside(subject.Result);
 
-                    //Vérifier s'il y a eu une erreur avec l'observation
-                    if (iErreurLocal != 0)
+                    // Prédiction avec perceptron actuel
+                    var prediction = Evaluate(subject);
+
+                    // On compare avec le résultat officiel de l'échantillon
+                    // et on applique une correction aux synapses au besoin
+                    if (prediction != target)
                     {
-                        //Si on s'est trompé, alors mettre à jour les poids 
-                        //synaptiques avec la méthode de descente en gradient.
-                        data.InputWeights[0] += data.LearningSpeed * iErreurLocal;
-                        for (int j = 1; j < data.InputWeights.Length; j++)
+                        var error = target - prediction; // en Heaviside ça donne -1.0 ou +1.0
+
+                        // mettre à jour les poids synaptiques
+                        // avec la méthode de descente en gradient.
+                        for (int i = 0; i < synapse.Length; i++)
                         {
-                            data.InputWeights[j] += data.LearningSpeed * iErreurLocal * sample.GetAttributeValue(j - 1);
+                            var adjustment = error * learningSpeed; // * 0.1 par défaut, donc -0.1 ou +0.1
+                            synapse[i] += adjustment * subject[i];
                         }
-                        iNbErreur++;
+                        errors++;
                     }
                 }
-                sResultat += string.Format("\r\nIteration {0} \t Erreur {1}", iNbIteration, iNbErreur);
-                sResultat += string.Format("\r\nLe taux de succès est {0} %",
-                                            ((double)(samples.Length- iNbErreur) / (double)(samples.Length)) * 100.00);
-
-                iNbIteration++;
+                learningErrorHistory.Add(errors);
             }
-            while (iNbErreur > 0 && iNbIteration < 10000);
+            while (errors > 0 && learningErrorHistory.Count < iterMax);
 
-            return sResultat;
+            return learningErrorHistory.ToArray();
+        }
 
+        public int[] LearnFrom(string type, string sourceFile, double learningSpeed = 0.1, int iterMax = 10000)
+        {
+            return LearnFrom(AISampleFactory.CreateFromFile(type, sourceFile), learningSpeed, iterMax);
         }
 
         /// <summary>
-        /// Permet de tester un perceptron entrainé préalablement
+        /// Compte le nombre d'évaluations (prédictions) ayant un écart avec le résultat réel des échantillons
         /// </summary>
-        /// <param name="bd">L'ensemble d'entrainement</param>
-        /// <returns>Les étapes intermédiaires du perceptron</returns>
-        public string BatchEvaluate(string type, string sourceFile)
+        /// <param name="type">Nom de la classe d'échantillons (voir AI.Sample.Type)</param>
+        /// <param name="sourceFile">Fichier contenant une série d'échantillons</param>
+        /// <returns></returns>
+        public int BatchEvaluate(string type, string sourceFile)
         {
-            double dSum = 0;
-            int iNbErreur = 0;
+            int errors = 0;
 
-            int iResultatEstime = 0;
-            int iErreurLocal = 0;
-            string sResultat = "";
+            AISample[] samples = AISampleFactory.CreateFromFile(type, sourceFile);
 
-            AISample[] samples = AISampleFactory.CreateFromFile(type,sourceFile);
-
-
-            foreach(AISample sample in samples)
+            foreach (AISample subject in samples)
             {
-                //Évaluer une observation et de faire une prédiction.
-                dSum = data.InputWeights[0];
-                for (int j = 1; j < data.InputWeights.Length; j++)
-                    dSum += data.InputWeights[j] * sample.GetAttributeValue(j - 1);
-                iResultatEstime = (dSum >= 0) ? 1 : 0;
-                iErreurLocal = sample.Result - iResultatEstime;
-
-                //Vérifier s'il y a eu une erreur avec l'observation
-                if (iErreurLocal != 0)
-                    iNbErreur++;
+                if (Evaluate(subject)>0 != subject.Result > 0)
+                    errors++;
             }
-            sResultat += string.Format("\r\nLe percetron a fait {0} Erreur(s) sur l'échantillon de test", iNbErreur);
-            sResultat += string.Format("\r\nLe taux de succès est {0} %",
-                                        ((double)(samples.Length - iNbErreur) / (double)(samples.Length)) * 100.00);
-            return sResultat;
-
+            return errors;
         }
 
+        /// <summary>
+        /// Évalue les entrées du perceptron et prédit un résultat
+        /// </summary>
+        /// <param name="subject">Échantillon à évaluer</param>
+        /// <returns>Résultat prédit par le perceptron</returns>
+        public double Evaluate(AISample subject)
+        {
+            var sum = 0.0;
+            for (int i = 0; i < synapse.Length; i++)
+                sum += synapse[i] * subject[i];
+            return Heaviside(sum);
+        }
     }
 }

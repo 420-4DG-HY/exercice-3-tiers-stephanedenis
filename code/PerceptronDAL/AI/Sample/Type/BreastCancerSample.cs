@@ -12,7 +12,7 @@ using System.Windows;
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.AI.Sample.Type
+namespace Demo3tiers.DAL.AI.Sample.Type
 {
     /// <summary>
     /// Échantillon de cellules potentiellement cancéreuses
@@ -40,9 +40,9 @@ namespace Perceptron.DAL.AI.Sample.Type
     11. Class:                        (0 for benign, 1 for malignant)
 
      */
-    internal class BreastCancerSample : AISample
+    public class BreastCancerSample : AISample
     {
-        static readonly string[] BreastCancerSampleAttributeNames = {
+        public static readonly string[] BreastCancerSampleAttributeNames = {
            "Clump Thickness",
            "Uniformity of Cell Size",
            "Uniformity of Cell Shape",
@@ -54,7 +54,7 @@ namespace Perceptron.DAL.AI.Sample.Type
            "Mitoses"
         };
 
-        static readonly string[] BreastCancerSampleResultNames = { 
+        public static readonly string[] BreastCancerSampleResultNames = { 
             "Benign",
             "Malignant"
         };

@@ -3,24 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo3tiers.DAL", "PerceptronDAL\Demo3tiers.DAL.csproj", "{743BDECB-D04D-4CD3-9635-5C363C7CEC86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Perceptron.DAL", "PerceptronDAL\Perceptron.DAL.csproj", "{743BDECB-D04D-4CD3-9635-5C363C7CEC86}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo3tiers.BLL", "PerceptronBLL\Demo3tiers.BLL.csproj", "{97360AE5-20F0-45B9-BDB5-75FB4B94CD5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Perceptron.BLL", "PerceptronBLL\Perceptron.BLL.csproj", "{97360AE5-20F0-45B9-BDB5-75FB4B94CD5E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{743BDECB-D04D-4CD3-9635-5C363C7CEC86} = {743BDECB-D04D-4CD3-9635-5C363C7CEC86}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo3tiers.DAL.Test", "DAL-Test\Demo3tiers.DAL.Test.csproj", "{D3AE8861-44BD-440D-B83E-1AA934AE7D60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Perceptron.DAL.Test", "DAL-Test\Perceptron.DAL.Test.csproj", "{D3AE8861-44BD-440D-B83E-1AA934AE7D60}"
 	ProjectSection(ProjectDependencies) = postProject
 		{743BDECB-D04D-4CD3-9635-5C363C7CEC86} = {743BDECB-D04D-4CD3-9635-5C363C7CEC86}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo3tiers.GUI", "PerceptronGUI\Demo3tiers.GUI.csproj", "{79A6B14E-62AE-448F-8CDA-0DEEC1FB47C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Perceptron.GUI", "PerceptronGUI\Perceptron.GUI.csproj", "{79A6B14E-62AE-448F-8CDA-0DEEC1FB47C9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{97360AE5-20F0-45B9-BDB5-75FB4B94CD5E} = {97360AE5-20F0-45B9-BDB5-75FB4B94CD5E}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo3tiers.BLL.Test", "Perceptron.BLL.Test\Demo3tiers.BLL.Test.csproj", "{F64A777A-4BC3-4BC6-BA45-57E95C590A64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perceptron.BLL.Test", "Perceptron.BLL.Test\Perceptron.BLL.Test.csproj", "{F64A777A-4BC3-4BC6-BA45-57E95C590A64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

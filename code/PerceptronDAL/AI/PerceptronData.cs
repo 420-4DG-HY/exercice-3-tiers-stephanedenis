@@ -3,19 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Perceptron.DAL.AI
+namespace Demo3tiers.DAL.AI
 {
     public class PerceptronData
     {
-        public double LearningSpeed { get; private set; }
-        public double[] InputWeights { get; private set; }
-
-        public PerceptronData(double learningSpeed, int inputSize)
+        // Pour comprendre à quoi correspondent les poids des synapses
+        // Voir AI.Sample.Type
+        public string Type 
         {
-            LearningSpeed = learningSpeed;
+            get;
+            set; 
+        }
+        
+        public double[] InputWeights { 
+            get; 
+            set; // Utilisé par constructeur et désérialisation seulement
+        }
+
+        public double this[int i]
+        {
+            get { return InputWeights[i]; }
+            set { InputWeights[i] = value; }
+        }
+
+        [JsonIgnore]
+        public int Length { get => InputWeights.Length; }
+
+        public PerceptronData(int inputSize, string type)
+        {
             InputWeights = new double[inputSize];
+            Type = type;
+
+        }
+
+        [JsonConstructor]
+        public PerceptronData()
+        {
+            // Utilisé par la désérialisation seulement
         }
 
         public static PerceptronData RetreiveFromFile(string name)

@@ -1,12 +1,12 @@
-﻿using Perceptron.DAL.AI.Sample.Type;
-using Perceptron.DAL.TabularData;
+﻿using Demo3tiers.DAL.AI.Sample.Type;
+using Demo3tiers.DAL.TabularData;
 
 /// <summary>
 /// Démonstration du patron architectural 3 tiers et de plusieurs patrons de conception
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.AI.Sample
+namespace Demo3tiers.DAL.AI.Sample
 {
     /// <summary>
     /// Démonstration du patron Fabrique (Factory) pour créer des instances d'échantillons (sample) pour le perceptron

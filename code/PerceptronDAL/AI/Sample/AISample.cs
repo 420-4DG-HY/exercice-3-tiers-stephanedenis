@@ -3,7 +3,7 @@
 /// 
 /// (CC) BY-SA Stéphane Denis et Hugo St-Louis, CEGEP de Saint-Hyacinthe
 /// </summary>
-namespace Perceptron.DAL.AI.Sample
+namespace Demo3tiers.DAL.AI.Sample
 {
     /// <summary>
     /// Échantillon de données pouvant être utilisé de façon homogène dans un perceptron
@@ -17,17 +17,15 @@ namespace Perceptron.DAL.AI.Sample
         }
         public double AttributeDomainMaxValue { get; protected set; }
         public double AttributeDomainMinValue { get; protected set; }
-        protected double[] Attributes;
+        double[] Attributes;
 
-        /// <summary>
-        /// Permet de connaitre la valeur d'un des attributs
-        /// </summary>
-        /// <param name="index">position dans le tableau d'attributs</param>
-        /// <returns></returns>
-        public double GetAttributeValue(int index)
+        public double this[int i]
         {
-            return Attributes[index];
+            get { return Attributes[i]; }
+            set { Attributes[i] = value; }
         }
+
+        public int Length { get => Attributes.Length; }
 
         /// <summary>
         /// Permet de connaitre la valeur d'un des attributs
@@ -43,15 +41,6 @@ namespace Perceptron.DAL.AI.Sample
         public string GetResultNames(int index)
         {
             return ResultNames[index];
-        }
-
-        /// <summary>
-        /// Permet de connaitre la taille des données en entrée
-        /// </summary>
-        /// <returns>nombre d'attributs en entrée du perceptron</returns>
-        public int GetAttributeCount()
-        {
-            return Attributes.Length;
         }
 
         public int ResultDomainMaxValue { get; protected set; }

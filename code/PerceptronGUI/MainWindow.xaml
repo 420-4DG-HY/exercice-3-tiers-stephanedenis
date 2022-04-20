@@ -1,20 +1,27 @@
-﻿<Window x:Class="Perceptron.GUI.MainWindow"
+﻿<Window x:Class="Demo3tiers.GUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PerceptronGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220*"/>
             <ColumnDefinition Width="417*"/>
         </Grid.ColumnDefinitions>
         <Label x:Name="lblFichier" Content="Fichier : " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="193"/>
-        <TextBox x:Name="txtNomFichier" HorizontalAlignment="Left" Height="26" Margin="60,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="378" Grid.ColumnSpan="2"/>
-        <Button x:Name="btnLireFichier" Content="Lire Fichier" HorizontalAlignment="Left" Height="30" Margin="341,6,0,0" VerticalAlignment="Top" Width="70" Grid.Column="1" Click="btnLireFichier_Click"/>
-        <TextBlock x:Name="txtConsole" HorizontalAlignment="Left" Height="274" Margin="10,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="623" Grid.ColumnSpan="2" Background="Black" Foreground="Green"/>
+        <TextBox x:Name="txtNomFichier" HorizontalAlignment="Left" Height="26" Margin="60,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" 
+                 Width="649" Grid.ColumnSpan="2"/>
+        <Button x:Name="btnLireFichier" Content="Lire Fichier" HorizontalAlignment="Left" Height="30" Margin="444,10,0,0" 
+                VerticalAlignment="Top" Width="70" Grid.Column="1" Click="btnLireFichier_Click"/>
+        <TextBlock x:Name="txtConsole" HorizontalAlignment="Left" Height="32" Margin="60,36,0,0" TextWrapping="Wrap" 
+                   VerticalAlignment="Top" Width="649" Grid.ColumnSpan="2" Background="Black" Foreground="LightGreen"/>
+        <Canvas x:Name="graphCanvas" Background="Black" HorizontalAlignment="Left" Height="331" Margin="60,93,0,0" VerticalAlignment="Top" Width="730" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" />
+        <Label Content="Évolution des erreurs pendant l'apprentissage" HorizontalAlignment="Left" Margin="60,70,0,0" VerticalAlignment="Top" Width="291" Grid.ColumnSpan="2"/>
+        <Label x:Name="lblGraphMin" Content="Min" HorizontalAlignment="Left" Margin="17,377,0,0" VerticalAlignment="Top" Height="47"/>
+        <Label x:Name="lblGraphMax" Content="Max" HorizontalAlignment="Left" Margin="17,88,0,0" VerticalAlignment="Top" Height="48"/>
 
     </Grid>
 </Window>

@@ -1,4 +1,4 @@
-﻿using Perceptron.DAL.AI.Sample;
+﻿using Demo3tiers.DAL.AI.Sample;
 
 using System;
 using System.Collections.Generic;
@@ -6,12 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Perceptron.DAL.TabularData
+namespace Demo3tiers.DAL.TabularData
 {
     internal class DatReader : ITabularDataReader
     {
         public string[][] Read(string fileName)
         {
+
             List<string[]> table = new List<string[]>();
 
             if (!fileName.EndsWith(".dat"))
@@ -31,10 +32,12 @@ namespace Perceptron.DAL.TabularData
                 int lines;
                 int columns;
                 StreamReader sr = new StreamReader(fileName);
+                int currentLine = 0;
                 try
                 {
                     lines = int.Parse(sr.ReadLine());
                     columns = int.Parse(sr.ReadLine());
+                    currentLine += 2;
                 }
                 catch (Exception ex) when (ex is NullReferenceException || ex is FormatException)
                 {
@@ -46,32 +49,33 @@ namespace Perceptron.DAL.TabularData
                 while (!sr.EndOfStream)
                 {
                     string? line = sr.ReadLine();
+                    currentLine++;
                     if (line == null)
                     {
                         throw new InvalidOperationException(
-                            "Le fichier \"" + fileName + "\" contient une ligne vide à un endroit innattendu.");
+                            "Le fichier \"" + fileName + "\" contient une ligne vide à un endroit innattendu. (ligne "+ currentLine+")");
                     }
 
                     string[] dataLine = line.Split('\t');
                     if (dataLine.Length != columns)
                     {
                         throw new InvalidOperationException(
-                            "Le fichier \"" + fileName + "\" contient une ligne avec un nombre de colonnes innattendu (" + dataLine.Length + "/" + columns + ").");
+                            "Le fichier \"" + fileName + "\" contient une ligne avec un nombre de colonnes innattendu (" + dataLine.Length + "/" + columns + ") à la ligne " + currentLine + ".");
                     }
 
-                        List<string> fields = new List<string>();
-                        for (int i = 0; i < dataLine.Length ; i++) 
-                        {
-                            fields.Add(dataLine[i]);
-                        }
-                        table.Add(fields.ToArray());
+                    List<string> fields = new List<string>();
+                    for (int i = 0; i < dataLine.Length; i++)
+                    {
+                        fields.Add(dataLine[i]);
+                    }
+                    table.Add(fields.ToArray());
 
                     linesRead++;
                 }
                 if (linesRead != lines)
                 {
                     throw new InvalidOperationException(
-                        "Le fichier \"" + fileName + "\" contient un nombre d'entrées innattendu (" + linesRead + "/" + lines + ").");
+                        "Le fichier \"" + fileName + "\" contient un nombre d'entrées innattendu (" + linesRead + "/" + lines + ") à la ligne " + currentLine + ".");
                 }
             }
             catch (Exception ex)

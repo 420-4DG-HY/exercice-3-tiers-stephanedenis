@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PerceptronBLL\PerceptronBLL.csproj" />
-    <ProjectReference Include="..\PerceptronDAL\PerceptronDAL.csproj" />
+    <ProjectReference Include="..\PerceptronBLL\Demo3tiers.BLL.csproj" />
+    <ProjectReference Include="..\PerceptronDAL\Demo3tiers.DAL.csproj" />
   </ItemGroup>
 
 </Project>

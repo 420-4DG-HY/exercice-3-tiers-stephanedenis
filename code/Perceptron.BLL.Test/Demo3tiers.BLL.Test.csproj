@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>DAL_Test</RootNamespace>
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
@@ -16,7 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PerceptronDAL\PerceptronDAL.csproj" />
+    <ProjectReference Include="..\PerceptronBLL\Demo3tiers.BLL.csproj" />
+    <ProjectReference Include="..\PerceptronDAL\Demo3tiers.DAL.csproj" />
   </ItemGroup>
 
 </Project>
