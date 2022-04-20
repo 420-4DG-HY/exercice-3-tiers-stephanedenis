@@ -51,7 +51,7 @@ namespace Demo3tiers.GUI
                     foreach (int error in learningCurve)
                     {
                         double positionX = width * ((double)index / (double)learningCurve.Length);
-                        double positionY =  height * ((double)(error - min) / (double)(max - min));
+                        double positionY =  height * ((double)(error - min) / Math.Max(1,(max - min)));
                         Line line = new Line();
                         line.Stroke = System.Windows.Media.Brushes.LightGreen;
                         line.StrokeThickness = width / learningCurve.Length;
@@ -61,7 +61,7 @@ namespace Demo3tiers.GUI
                         graphCanvas.Children.Add(line);
                         index++;
                     }
-                    txtConsole.Text = "Apprentissage terminé";
+                    txtConsole.Text = "Apprentissage terminé en "+ learningCurve.Length+" itérations.";
                 }
                 catch (Exception ex)
                 {

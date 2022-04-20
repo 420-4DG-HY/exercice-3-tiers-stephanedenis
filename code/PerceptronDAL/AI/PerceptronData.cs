@@ -12,14 +12,15 @@ namespace Demo3tiers.DAL.AI
     {
         // Pour comprendre à quoi correspondent les poids des synapses
         // Voir AI.Sample.Type
-        public string Type 
+        public string Type
         {
             get;
-            set; 
+            set;
         }
-        
-        public double[] InputWeights { 
-            get; 
+
+        public double[] InputWeights
+        {
+            get;
             set; // Utilisé par constructeur et désérialisation seulement
         }
 
@@ -45,6 +46,14 @@ namespace Demo3tiers.DAL.AI
             // Utilisé par la désérialisation seulement
         }
 
+        public PerceptronData DeepCopy()
+        {
+            PerceptronData perceptronData = new PerceptronData();
+            perceptronData.Type = Type;
+            perceptronData.InputWeights = (double[])InputWeights.Clone();
+            return perceptronData;
+        }
+
         public static PerceptronData RetreiveFromFile(string name)
         {
             string fileName = name + ".perceptron.json";
@@ -54,7 +63,7 @@ namespace Demo3tiers.DAL.AI
             PerceptronData? pd =
                JsonSerializer.Deserialize<PerceptronData>(jsonString);
 
-            if(pd == null)
+            if (pd == null)
             {
                 throw new Exception("Erreur d'interprétation du fichier " + fileName);
             }
@@ -65,7 +74,7 @@ namespace Demo3tiers.DAL.AI
         {
             string fileName = name + ".perceptron.json";
             var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize<PerceptronData>(this,options);
+            string jsonString = JsonSerializer.Serialize<PerceptronData>(this, options);
             File.WriteAllText(fileName, jsonString);
             // TODO gérer les exceptions de WriteAllText
         }

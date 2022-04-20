@@ -3,6 +3,7 @@ using Demo3tiers.DAL.AI.Sample;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,7 +70,7 @@ namespace Demo3tiers.BLL
         /// <returns>valeur de 0 à 1 (ici, 0 ou 1)</returns>
         double Heaviside(double value)
         {
-            return value > 0 ? 1.0 : 0.0 ;
+            return value > 0 ? 1.0 : 0.0;
         }
 
         /// <summary>
@@ -78,8 +79,9 @@ namespace Demo3tiers.BLL
         /// <param name="samples">Échantillons de référence pour l'apprentissage</param>
         /// <param name="learningSpeed">Vitesse d'apprentissage (ratio d'intégration des erreurs détectées)</param>
         /// <param name="iterMax">Limite d'itérations</param>
+        /// <param name="antiRegresstion">Évite les échantillons dont l'apprentissage fait augmenter le taux d'erreurs (expérimental, plus lent si activé)</param>
         /// <returns>Historique du nombre d'erreurs pendant l'apprentissage</returns>
-        public int[] LearnFrom(AISample[] samples, double learningSpeed = 0.1, int iterMax = 10000)
+        public int[] LearnFrom(AISample[] samples, double learningSpeed = 0.1, int iterMax = 1000, bool antiRegresstion = false)
         {
             #region validation des arguments
             if (learningSpeed <= 0 || learningSpeed >= 1)
@@ -95,43 +97,93 @@ namespace Demo3tiers.BLL
             // Historique retourné en résultat : Utile pour étudier la courbe d'apprentissage
             List<int> learningErrorHistory = new List<int>();
 
-            int errors;
-            do
+            lock (this)
             {
-                errors = 0;
-                foreach (AISample subject in samples)
+                int originalErrors = BatchEvaluate(samples);
+                int learningCycleErrors = originalErrors;
+                bool improvement;
+                PerceptronData prototype = synapse; ; // utilisé pour l'antirégression
+                do
                 {
-                    // Au cas où il y aurait des nuances (valeurs entre 0 et 1), on applique la même fonction de sortie
-                    // au résultat de l'échantillon que ce qui est utilisé pour le résultat notre perceptron 
-                    double target = Heaviside(subject.Result);
-
-                    // Prédiction avec perceptron actuel
-                    var prediction = Evaluate(subject);
-
-                    // On compare avec le résultat officiel de l'échantillon
-                    // et on applique une correction aux synapses au besoin
-                    if (prediction != target)
+                    improvement = false;
+                    int candidateErrors = 0;
+                    foreach (AISample subject in samples)
                     {
-                        var error = target - prediction; // en Heaviside ça donne -1.0 ou +1.0
-
-                        // mettre à jour les poids synaptiques
-                        // avec la méthode de descente en gradient.
-                        for (int i = 0; i < synapse.Length; i++)
+                        #region initialisation pour antiregression  si activée
+                        if (antiRegresstion)
                         {
-                            var adjustment = error * learningSpeed; // * 0.1 par défaut, donc -0.1 ou +0.1
-                            synapse[i] += adjustment * subject[i];
+                            // prototype (et memento ;-),
+                            // pour ne conserver que les meilleurs valeurs de synapses
+                            // quand un échantillon biaise trop l'apprentissage
+                            prototype = synapse;
+                            synapse = prototype.DeepCopy();
                         }
-                        errors++;
-                    }
-                }
-                learningErrorHistory.Add(errors);
-            }
-            while (errors > 0 && learningErrorHistory.Count < iterMax);
+                        #endregion
 
+                        // Au cas où il y aurait des nuances (valeurs entre 0 et 1), on applique la même fonction de sortie
+                        // au résultat de l'échantillon que ce qui est utilisé pour le résultat notre perceptron 
+                        double target = Heaviside(subject.Result);
+
+                        // Prédiction avec perceptron actuel
+                        var prediction = Evaluate(subject);
+
+                        // On compare avec le résultat officiel de l'échantillon
+                        // et on applique une correction aux synapses au besoin
+                        if (prediction != target)
+                        {
+                            candidateErrors++;
+                            var error = target - prediction; // en Heaviside ça donne -1.0 ou +1.0
+
+                            // mettre à jour les poids synaptiques
+                            // avec la méthode de descente en gradient.
+                            for (int i = 0; i < synapse.Length; i++)
+                            {
+                                var adjustment = error * learningSpeed; // * 0.1 par défaut, donc -0.1 ou +0.1
+                                synapse[i] += adjustment * subject[i];
+                            }
+
+                        }
+
+                        #region Traitement de l'antiregression si activée
+                        if (antiRegresstion)
+                        {
+                            // On vérifie si on a amélioré le perceptron dans son ensemble
+                            candidateErrors = BatchEvaluate(samples);
+                            if (candidateErrors > learningCycleErrors)
+                            {
+                                // on a régressé... donc undo!
+                                // un échantillon atypique nuit à la généralisation
+                                synapse = prototype;
+                                candidateErrors = learningCycleErrors;
+                            }
+                            else
+                            {
+                                // on peut continuer les ajustements avec les corrections de cet échantillon
+                                learningCycleErrors = candidateErrors;
+                                improvement = true;
+                            }
+                        }
+                        else
+                        #endregion
+
+                        #region sans antirégression
+                        {
+                            if (candidateErrors <= learningCycleErrors)
+                            {
+                                improvement = true;
+                            }
+                            learningCycleErrors = candidateErrors;
+                        }
+                        #endregion
+                    }
+                    learningErrorHistory.Add(learningCycleErrors);
+                }
+                while (learningCycleErrors != 0 && improvement && learningErrorHistory.Count < iterMax);
+            }
             return learningErrorHistory.ToArray();
         }
 
-        public int[] LearnFrom(string type, string sourceFile, double learningSpeed = 0.1, int iterMax = 10000)
+        public int[] LearnFrom(string type, string sourceFile, double learningSpeed = 0.1, int iterMax = 1000)
         {
             return LearnFrom(AISampleFactory.CreateFromFile(type, sourceFile), learningSpeed, iterMax);
         }
@@ -141,17 +193,27 @@ namespace Demo3tiers.BLL
         /// </summary>
         /// <param name="type">Nom de la classe d'échantillons (voir AI.Sample.Type)</param>
         /// <param name="sourceFile">Fichier contenant une série d'échantillons</param>
-        /// <returns></returns>
+        /// <returns>Nombre de prédictions erronées</returns>
         public int BatchEvaluate(string type, string sourceFile)
         {
+            return BatchEvaluate(AISampleFactory.CreateFromFile(type, sourceFile));
+        }
+
+        /// <summary>
+        /// Compte le nombre d'évaluations (prédictions) ayant un écart avec le résultat réel des échantillons
+        /// </summary>
+        /// <param name="samples">Série d'échantillon à évaluer</param>
+        /// <returns>Nombre de prédictions erronées</returns>
+        public int BatchEvaluate(AISample[] samples)
+        {
             int errors = 0;
-
-            AISample[] samples = AISampleFactory.CreateFromFile(type, sourceFile);
-
-            foreach (AISample subject in samples)
+            lock (this)
             {
-                if (Evaluate(subject)>0 != subject.Result > 0)
-                    errors++;
+                foreach (AISample subject in samples)
+                {
+                    if (Evaluate(subject)  != Heaviside(subject.Result) )
+                        errors++;
+                }
             }
             return errors;
         }
@@ -164,8 +226,11 @@ namespace Demo3tiers.BLL
         public double Evaluate(AISample subject)
         {
             var sum = 0.0;
-            for (int i = 0; i < synapse.Length; i++)
-                sum += synapse[i] * subject[i];
+            lock (this)
+            {
+                for (int i = 0; i < synapse.Length; i++)
+                    sum += synapse[i] * subject[i];
+            }
             return Heaviside(sum);
         }
     }
